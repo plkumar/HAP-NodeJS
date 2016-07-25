@@ -3,15 +3,41 @@ var Service = require('../').Service;
 var Characteristic = require('../').Characteristic;
 var uuid = require('../').uuid;
 
+// MQTT Setup
+var mqtt = require('mqtt');
+var options = {
+    port: 1883,
+    host: '192.168.0.108',
+    username: 'nhomehub',
+    password: 'Budugu123',
+    clientId: 'wilock_homekit_bridge'
+};
+
+var client = mqtt.connect(options);
+
+client.subscribe('/nzen-dev-status');
+
+client.on('message', function(topic, message) {
+    console.log(message.toString());
+    var devStatus = JSON.parse(message);
+
+    if (devStatus.lock) {
+        WILOCK_LOCK.locked = devStatus.state
+    }
+});
+
+
 // here's a fake hardware device that we'll expose to HomeKit
 var WILOCK_LOCK = {
     locked: false,
     lock: function() {
         console.log("Locking the lock!");
+        client.publish('/nzen-actuator', "{\"lock\":1, \"state\":1}")
         WILOCK_LOCK.locked = true;
     },
     unlock: function() {
         console.log("Unlocking the lock!");
+        client.publish('/nzen-actuator', "{\"lock\":1, \"state\":0}")
         WILOCK_LOCK.locked = false;
     },
     identify: function() {
