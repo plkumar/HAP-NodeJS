@@ -6,10 +6,12 @@ var uuid = require('../').uuid;
 // MQTT Setup
 var mqtt = require('mqtt');
 var options = {
-    port: 13373,
-    host: 'm12.cloudmqtt.com',
-    username: 'jikbynmh',
-    password: 'DNwFM-PivkEl',
+    //port: 13373,
+    port: 1883,
+    //host: 'm12.cloudmqtt.com',
+    host: '192.168.0.108',
+    //username: 'jikbynmh',
+    //password: 'DNwFM-PivkEl',
     clientId: 'wilight_homekit_bridge'
 };
 
